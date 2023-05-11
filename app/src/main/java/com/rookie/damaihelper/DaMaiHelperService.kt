@@ -61,6 +61,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
         const val ID_PLUS_TICKET = "img_jia" // 选择票数
         const val ID_CONFIRM_BUY = "btn_buy" //确认购买
         const val ID_COUNTDOWN_MINUTE = "tv_minute_count_down" //分钟倒计时
+        const val ID_PRICE_CONTAINER = "project_detail_perform_price_flowlayout" //分钟倒计时
 
         const val STEP_READY = 0
         const val STEP_FIRST = 1
@@ -152,11 +153,12 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                 LIVE_SELECT_DETAIL_UI -> {
                     step = STEP_THIRD
                     event.source?.let { source ->
-                        val changciView = source.getNodeByText(UserManager.day)
-                        changciView?.click()
-                        val piaodangView = source.getNodeByText(UserManager.price)
-                        piaodangView?.click()
-                        sleep(200)
+                        gestureClick(source.getNodeByText(UserManager.day))
+//                        gestureClick(source.getNodeByText(UserManager.price))
+                        val priceContainer = source.getNodeById(dmNodeId(ID_PRICE_CONTAINER))
+                        val priceView = priceContainer?.getChild(UserManager.price.toInt())
+                        priceView?.click()
+                        sleep(100)
                         val addView = source.getNodeById(dmNodeId(ID_PLUS_TICKET))
                         repeat(UserManager.contactList.size - 1) {
                             addView?.click()
@@ -187,10 +189,10 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 //            fullPrintNode("content_change",event.source)
             if (step == STEP_SECOND) {
                 event.source?.let { source ->
-                    val minCount = source.getNodeById(dmNodeId(ID_COUNTDOWN_MINUTE))
+//                    val minCount = source.getNodeById(dmNodeId(ID_COUNTDOWN_MINUTE))
                     val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
                     val text = startBuy.text()
-                    val min = minCount.text()
+//                    val min = minCount.text()
                     logD("startBuy text:${startBuy.text()}")
                     if (text == "立即预订") {
                         startBuy?.click()

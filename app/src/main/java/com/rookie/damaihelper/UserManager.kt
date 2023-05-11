@@ -19,9 +19,9 @@ object UserManager {
 
     var contactList = mutableListOf<String>()
 
-    var day:String="周五"
-    var singer:String="五月天"
-    var price:String="755"
+    var day: String = "周五"
+    var singer: String = "五月天"
+    var price: String = "2"
 
     fun startQp() {
         startListener?.onStart()
