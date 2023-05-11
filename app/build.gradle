@@ -3,6 +3,13 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+// 读取version.properties
+def versionProps = new Properties()
+def versionPropsFile = rootProject.file('version.properties')
+if (versionPropsFile.exists()) {
+    versionProps.load(new FileInputStream(versionPropsFile))
+}
+
 android {
     namespace 'com.rookie.damaihelper'
     compileSdk 31
@@ -11,8 +18,8 @@ android {
         applicationId "com.rookie.damaihelper"
         minSdk 26
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode versionProps['versionCode'].toInteger()
+        versionName versionProps['versionName']
     }
 
     buildTypes {
@@ -29,6 +36,50 @@ android {
         jvmTarget = '1.8'
     }
 
+}
+
+task upgradeVersion {
+    group 'help'
+    description '构建新版本'
+    doLast {
+        println("---自动升级版本号---\n")
+        def versionProp = new Properties()
+        def versionFile = rootProject.file('version.properties')
+        if (versionFile.exists()) {
+            versionProp.load(new FileInputStream(versionPropsFile))
+        }
+        String oldVersionCode = versionProp['versionCode']
+        String oldVersionName = versionProp['versionName']
+        if (oldVersionCode == null || oldVersionName == null ||
+                oldVersionCode.isEmpty() || oldVersionName.isEmpty()) {
+            println("error:版本号不能为空")
+            return;
+        }
+        versionProps['versionCode'] = String.valueOf(versionProps['versionCode'].toInteger() + 1)
+        String str = versionProps['versionName'].toString()
+        versionProps['versionName'] = str.substring(0, str.lastIndexOf('.') + 1) +
+                (str.substring(str.lastIndexOf('.') + 1).toInteger() + 1)
+        String tip =
+                "版本号从$oldVersionName($oldVersionCode)升级到${versionProps['versionName']}(${versionProps['versionCode']})"
+        println(tip)
+
+        def writer = new FileWriter(versionPropsFile)
+        versionProps.store(writer, null)
+        writer.flush()
+        writer.close()
+        def tag = "v${versionProps['versionName']}"
+        cmdExecute("git pull")
+        cmdExecute("git add version.properties")
+        cmdExecute("git commit -m \"版本号升级为：$tag\"")
+        cmdExecute("git push origin")
+        cmdExecute("git tag $tag")
+        cmdExecute("git push origin $tag")
+    }
+}
+
+void cmdExecute(String cmd) {
+    println "\n执行$cmd"
+    println cmd.execute().text
 }
 
 dependencies {
