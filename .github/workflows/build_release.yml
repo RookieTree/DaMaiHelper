@@ -1,0 +1,45 @@
+name: build release
+
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build apk with Gradle
+      run: ./gradlew clean && ./gradlew app:assembleRelease
+      # 创建release并上传apk
+    - uses: softprops/action-gh-release@v1
+      id: create_release
+      with:
+        files: ${{ github.workspace }}/app/build/outputs/apk/release/app-release.apk
+        token: ${{ secrets.GITHUB_TOKEN }}
+      #上传到蒲公英
+    - name: Upload File to Pgyer
+      uses: PGYER/pgyer-upload-app-action@v1.3
+      with:
+        _api_key: ${{ secrets.PGYER_API_KEY }}
+        appFilePath: ${{ github.workspace }}/app/build/outputs/apk/release/app-release.apk
+      #存档apk
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        # Artifact name
+        name: build
+        # A file, directory or wildcard pattern that describes what to upload
+        path: ${{ github.workspace }}/app/build/outputs #将打包之后的文件全部上传（里面会有混淆的map文件）
+
