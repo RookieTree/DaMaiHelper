@@ -62,6 +62,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
         const val ID_CONFIRM_BUY = "btn_buy" //确认购买
         const val ID_COUNTDOWN_MINUTE = "tv_minute_count_down" //分钟倒计时
         const val ID_PRICE_CONTAINER = "project_detail_perform_price_flowlayout" //分钟倒计时
+        const val ID_DATE_CONTAINER = "project_detail_perform_flowlayout" //分钟倒计时
 
         const val STEP_READY = 0
         const val STEP_FIRST = 1
@@ -153,10 +154,13 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                 LIVE_SELECT_DETAIL_UI -> {
                     step = STEP_THIRD
                     event.source?.let { source ->
-                        gestureClick(source.getNodeByText(UserManager.day))
+//                        gestureClick(source.getNodeByText(UserManager.day))
 //                        gestureClick(source.getNodeByText(UserManager.price))
+                        val dateContainer = source.getNodeById(dmNodeId(ID_DATE_CONTAINER))
+                        val dayView = dateContainer?.getChild(UserManager.day.toInt()-1)
+                        dayView?.click()
                         val priceContainer = source.getNodeById(dmNodeId(ID_PRICE_CONTAINER))
-                        val priceView = priceContainer?.getChild(UserManager.price.toInt())
+                        val priceView = priceContainer?.getChild(UserManager.price.toInt()-1)
                         priceView?.click()
                         sleep(100)
                         val addView = source.getNodeById(dmNodeId(ID_PLUS_TICKET))
