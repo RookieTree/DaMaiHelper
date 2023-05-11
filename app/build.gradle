@@ -22,10 +22,32 @@ android {
         versionName versionProps['versionName']
     }
 
+    //签名
+    signingConfigs {
+        myConfig {
+            storeFile file("learnlaw.keystore")
+            storePassword "135790"
+            keyAlias "learnlaw"
+            keyPassword "135790"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            signingConfig signingConfigs.myConfig //签名
+            minifyEnabled true //发布到市场需要混淆
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
+            signingConfig signingConfigs.myConfig //签名
+            minifyEnabled false
+            zipAlignEnabled true
         }
     }
     compileOptions {
