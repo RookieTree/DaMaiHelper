@@ -63,12 +63,10 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
         const val ID_COUNTDOWN_MINUTE = "tv_minute_count_down" //分钟倒计时
 
         const val STEP_READY = 0
-        const val STEP_CLICK_WANT = 1
-        const val STEP_CLICK_BUY = 2
-        const val STEP_CLICK_QIANG = 3
-        const val STEP_CLICK_CHANGCI = 4
-        const val STEP_CLICK_PIAODANG = 5
-        const val STEP_CLICK_CONFIRM = 6
+        const val STEP_FIRST = 1
+        const val STEP_SECOND = 2
+        const val STEP_THIRD = 3
+        const val STEP_FOURTH = 4
     }
 
     private var isStop = false
@@ -129,6 +127,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             when (event.className.toString()) {
                 ME_UI -> {
+                    step = STEP_FIRST
                     event.source?.let { source ->
                         sleep(500)
                         val wantView = source.getNodeByText("想看&想玩")
@@ -139,6 +138,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                 }
 
                 LIVE_DETAIL_UI -> {
+                    step = STEP_SECOND
                     event.source?.let { source ->
                         val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
                         val text = startBuy.text()
@@ -150,6 +150,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                 }
 
                 LIVE_SELECT_DETAIL_UI -> {
+                    step = STEP_THIRD
                     event.source?.let { source ->
                         val changciView = source.getNodeByText(UserManager.day)
                         changciView?.click()
@@ -166,6 +167,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                 }
 
                 LIVE_TOTAL_UI -> {
+                    step = STEP_FOURTH
                     event.source?.let { source ->
                         if (System.currentTimeMillis() - lastTime < 1000L) {
                             return
@@ -182,15 +184,17 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                 }
             }
         }else if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
-            fullPrintNode("content_change",event.source)
-            event.source?.let { source ->
-                val minCount = source.getNodeById(dmNodeId(ID_COUNTDOWN_MINUTE))
-                val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
-                val text = startBuy.text()
-                val min = minCount.text()
-                logD("startBuy text:${startBuy.text()}")
-                if (text == "立即预订") {
-                    startBuy?.click()
+//            fullPrintNode("content_change",event.source)
+            if (step == STEP_SECOND) {
+                event.source?.let { source ->
+                    val minCount = source.getNodeById(dmNodeId(ID_COUNTDOWN_MINUTE))
+                    val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
+                    val text = startBuy.text()
+                    val min = minCount.text()
+                    logD("startBuy text:${startBuy.text()}")
+                    if (text == "立即预订") {
+                        startBuy?.click()
+                    }
                 }
             }
         }

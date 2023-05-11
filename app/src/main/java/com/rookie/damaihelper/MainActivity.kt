@@ -52,14 +52,14 @@ class MainActivity : BaseActivity() {
                 val singer = etSinger.text
                 val day = etDay.text
                 val price = etPrice.text
-                singer?.let {
-                    UserManager.singer=it.toString()
+                if (!TextUtils.isEmpty(singer)){
+                    UserManager.singer=singer.toString()
                 }
-                day?.let {
-                    UserManager.day=it.toString()
+                if (!TextUtils.isEmpty(day)){
+                    UserManager.day=day.toString()
                 }
-                price?.let {
-                    UserManager.price=it.toString()
+                if (!TextUtils.isEmpty(price)){
+                    UserManager.price=price.toString()
                 }
                 startDaMai()
                 UserManager.startQp()
