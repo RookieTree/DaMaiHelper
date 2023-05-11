@@ -26,14 +26,14 @@ jobs:
     - uses: softprops/action-gh-release@v1
       id: create_release
       with:
-        files: ${{ github.workspace }}/app/build/outputs/apk/release/apk-release.apk
+        files: ${{ github.workspace }}/app/build/outputs/apk/release/app-release.apk
         token: ${{ secrets.GITHUB_TOKEN }}
       #上传到蒲公英
     - name: Upload File to Pgyer
       uses: PGYER/pgyer-upload-app-action@v1.3
       with:
         _api_key: ${{ secrets.PGYER_API_KEY }}
-        appFilePath: ${{ github.workspace }}/app/build/outputs/apk/release/apk-release.apk
+        appFilePath: ${{ github.workspace }}/app/build/outputs/apk/release/app-release.apk
       #存档apk
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.2
@@ -41,5 +41,5 @@ jobs:
         # Artifact name
         name: build
         # A file, directory or wildcard pattern that describes what to upload
-        path: ${{ github.workspace }}/app/build/outputs/apk-release.apk #将打包之后的文件全部上传（里面会有混淆的map文件）
+        path: ${{ github.workspace }}/app/build/outputs/app-release.apk #将打包之后的文件全部上传（里面会有混淆的map文件）
 
