@@ -45,7 +45,6 @@ android {
 
         debug {
             debuggable true
-            signingConfig signingConfigs.myConfig //签名
             minifyEnabled false
             zipAlignEnabled true
         }
