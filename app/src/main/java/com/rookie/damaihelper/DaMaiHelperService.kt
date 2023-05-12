@@ -61,14 +61,17 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
         const val ID_PLUS_TICKET = "img_jia" // 选择票数
         const val ID_CONFIRM_BUY = "btn_buy" //确认购买
         const val ID_COUNTDOWN_MINUTE = "tv_minute_count_down" //分钟倒计时
-//        const val ID_PRICE_CONTAINER = "project_detail_perform_price_flowlayout" //分钟倒计时
+
+        //        const val ID_PRICE_CONTAINER = "project_detail_perform_price_flowlayout" //分钟倒计时
 //        const val ID_DATE_CONTAINER = "project_detail_perform_flowlayout" //分钟倒计时
+        const val ID_USER_CONTAINER = "recycler_main" //分钟倒计时
 
         const val STEP_READY = 0
         const val STEP_FIRST = 1
         const val STEP_SECOND = 2
         const val STEP_THIRD = 3
         const val STEP_FOURTH = 4
+        const val STEP_FINISH = 5
     }
 
     private var isStop = false
@@ -76,7 +79,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
     private var overlayView: View? = null
     private var mWindowManager: WindowManager? = null
-    private val kaiQiangStr="即将开抢"
+    private val kaiQiangStr = "即将开抢"
 
     override fun onCreate() {
         super.onCreate()
@@ -117,7 +120,8 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
             mWindowManager?.addView(overlayView, params)
         }
     }
-    private var hasCheck:Boolean=false
+
+    private var hasCheck: Boolean = false
 
     /**
      * 监听窗口变化的回调
@@ -167,21 +171,12 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
                 LIVE_TOTAL_UI -> {
                     step = STEP_FOURTH
-                    event.source?.let { source ->
-                        if (!hasCheck) {
-                            sleep(500)
-                            for (name in UserManager.contactList) {
-                                val addView = source.getNodeByText(name, true)
-                                addView.click()
-                            }
-                            hasCheck = true
-                            val nodeByText = source.getNodeByText("提交订单", true)
-                            nodeByText?.click()
-                        }
-                    }
+//                    fullPrintNode("buybuy",event.source)
+                    sleep(200)
+                    confirmOrder(event)
                 }
             }
-        }else if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
+        } else if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
 //            fullPrintNode("content_change",event.source)
             if (step == STEP_SECOND) {
                 event.source?.let { source ->
@@ -194,12 +189,37 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                         startBuy?.click()
                     }
                 }
+            }else if (step== STEP_FOURTH){
+//                fullPrintNode("final_step",event.source)
+                confirmOrder(event)
+            }
+        }
+    }
+
+    private fun confirmOrder(event: AccessibilityEvent) {
+        event.source?.let { source ->
+            if (!hasCheck) {
+                for (name in UserManager.contactList) {
+                    val userView = source.getNodeByText(name, true)
+                    logD("userView text:${userView.text()}")
+                    userView?.let {
+                        it.click()
+                        hasCheck = true
+                    }
+                }
+            }
+            val nodeByText = source.getNodeByText("提交订单", true)
+            nodeByText?.let {
+                it.click()
+                step = STEP_FINISH
             }
         }
     }
 
     override fun onStart() {
         isStop = false
+        hasCheck = false
+        step = STEP_READY
         showWindow()
     }
 
