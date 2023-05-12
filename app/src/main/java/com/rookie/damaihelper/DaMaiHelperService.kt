@@ -31,8 +31,6 @@ import androidx.core.app.NotificationCompat
 class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
     companion object {
-        //首页-精选
-//        const val LAUNCHER_UI = "cn.damai.homepage.MainActivity"  // 首页
         //首页-现场
 //        const val LIVE_UI = "cn.damai.discover.main.ui.TabLiveActivity"  // 现场
         //首页-我的
@@ -48,11 +46,6 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
         //购票结算页
         const val LIVE_TOTAL_UI = "cn.damai.ultron.view.activity.DmOrderActivity"
-
-        //        const val ID_TAB_CONTAINER="mine_activity_bottomsheet_container" //我的 tab父容器
-        const val ID_ME_TAB = "tab_text" //首页-我的 tab
-        const val ID_ME_WANT_WATCH = "tv_name"  // 我的-想看
-        const val ID_ME_BUY = "id_h_project_action_tip"  // 我的-想看-购买
 
         //        const val ID_LIVE_DETAIL_BUY =
 //            "trade_project_detail_purchase_status_bar_container_fl"//详情页-开抢
@@ -180,8 +173,6 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 //            fullPrintNode("content_change",event.source)
             if (step == STEP_SECOND) {
                 event.source?.let { source ->
-//                    val minCount = source.getNodeById(dmNodeId(ID_COUNTDOWN_MINUTE))
-//                    val min = minCount.text()
                     val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
                     val text = startBuy.text()
                     logD("startBuy text:${startBuy.text()}")
