@@ -151,15 +151,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
                 LIVE_SELECT_DETAIL_UI -> {
                     step = STEP_THIRD
-                    event.source?.let { source ->
-                        sleep(100)
-                        val addView = source.getNodeById(dmNodeId(ID_PLUS_TICKET))
-                        repeat(UserManager.contactList.size - 1) {
-                            addView?.click()
-                        }
-                        val buyView = source.getNodeById(dmNodeId(ID_CONFIRM_BUY))
-                        buyView?.click()
-                    }
+                    clickAddUser(event)
                 }
 
                 LIVE_TOTAL_UI -> {
@@ -180,10 +172,25 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                         startBuy?.click()
                     }
                 }
-            }else if (step== STEP_FOURTH){
+            }else  if (step == STEP_THIRD) {
+                fullPrintNode("third_step",event.source)
+                clickAddUser(event)
+            } else if (step== STEP_FOURTH){
 //                fullPrintNode("final_step",event.source)
                 confirmOrder(event)
             }
+        }
+    }
+
+    private fun clickAddUser(event: AccessibilityEvent) {
+        event.source?.let { source ->
+            sleep(100)
+            val addView = source.getNodeById(dmNodeId(ID_PLUS_TICKET)) ?: return
+            repeat(UserManager.contactList.size - 1) {
+                addView.click()
+            }
+            val buyView = source.getNodeById(dmNodeId(ID_CONFIRM_BUY))
+            buyView?.click()
         }
     }
 
