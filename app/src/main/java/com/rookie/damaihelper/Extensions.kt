@@ -72,7 +72,7 @@ fun Context.shortToast(msg: String) =
 fun Context.longToast(msg: String) =
     Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG).show()
 
-const val TAG = "五月天助手"
+const val TAG = "大麦助手"
 const val SEGMENT_SIZE = 3072
 
 fun logD(content: String) {
