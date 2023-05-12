@@ -139,14 +139,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
                 LIVE_DETAIL_UI -> {
                     step = STEP_SECOND
-                    event.source?.let { source ->
-                        val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
-                        val text = startBuy.text()
-                        logD("startBuy text:${startBuy.text()}")
-                        if (text != kaiQiangStr) {
-                            startBuy?.click()
-                        }
-                    }
+                    startQ(event)
                 }
 
                 LIVE_SELECT_DETAIL_UI -> {
@@ -162,22 +155,25 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                 }
             }
         } else if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
-//            fullPrintNode("content_change",event.source)
+            fullPrintNode("content_change",event.source)
             if (step == STEP_SECOND) {
-                event.source?.let { source ->
-                    val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
-                    val text = startBuy.text()
-                    logD("startBuy text:${startBuy.text()}")
-                    if (text != kaiQiangStr) {
-                        startBuy?.click()
-                    }
-                }
-            }else  if (step == STEP_THIRD) {
-                fullPrintNode("third_step",event.source)
+                startQ(event)
+            } else if (step == STEP_THIRD) {
                 clickAddUser(event)
-            } else if (step== STEP_FOURTH){
+            } else if (step == STEP_FOURTH) {
 //                fullPrintNode("final_step",event.source)
                 confirmOrder(event)
+            }
+        }
+    }
+
+    private fun startQ(event: AccessibilityEvent) {
+        event.source?.let { source ->
+            val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
+            val text = startBuy.text()
+            logD("startBuy text:${startBuy.text()}")
+            if (text != kaiQiangStr) {
+                startBuy?.click()
             }
         }
     }
