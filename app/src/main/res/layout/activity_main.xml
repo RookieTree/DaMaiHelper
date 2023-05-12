@@ -43,7 +43,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:inputType="number"
-        android:hint="请输入观看档期, 默认选第一个(填数字)"
+        android:hint="请输入观看档期, 默认选第1个(填数字)"
         app:layout_constraintTop_toBottomOf="@+id/et_singer" />
 
     <Button

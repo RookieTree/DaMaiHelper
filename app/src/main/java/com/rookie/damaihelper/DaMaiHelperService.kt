@@ -61,8 +61,8 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
         const val ID_PLUS_TICKET = "img_jia" // 选择票数
         const val ID_CONFIRM_BUY = "btn_buy" //确认购买
         const val ID_COUNTDOWN_MINUTE = "tv_minute_count_down" //分钟倒计时
-        const val ID_PRICE_CONTAINER = "project_detail_perform_price_flowlayout" //分钟倒计时
-        const val ID_DATE_CONTAINER = "project_detail_perform_flowlayout" //分钟倒计时
+//        const val ID_PRICE_CONTAINER = "project_detail_perform_price_flowlayout" //分钟倒计时
+//        const val ID_DATE_CONTAINER = "project_detail_perform_flowlayout" //分钟倒计时
 
         const val STEP_READY = 0
         const val STEP_FIRST = 1
@@ -73,10 +73,10 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
     private var isStop = false
     private var step = STEP_READY
-    private var lastTime = 0L
 
     private var overlayView: View? = null
     private var mWindowManager: WindowManager? = null
+    private val kaiQiangStr="即将开抢"
 
     override fun onCreate() {
         super.onCreate()
@@ -117,6 +117,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
             mWindowManager?.addView(overlayView, params)
         }
     }
+    private var hasCheck:Boolean=false
 
     /**
      * 监听窗口变化的回调
@@ -145,7 +146,7 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                         val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
                         val text = startBuy.text()
                         logD("startBuy text:${startBuy.text()}")
-                        if (text == "立即预订") {
+                        if (text != kaiQiangStr) {
                             startBuy?.click()
                         }
                     }
@@ -154,14 +155,6 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                 LIVE_SELECT_DETAIL_UI -> {
                     step = STEP_THIRD
                     event.source?.let { source ->
-//                        gestureClick(source.getNodeByText(UserManager.day))
-//                        gestureClick(source.getNodeByText(UserManager.price))
-                        val dateContainer = source.getNodeById(dmNodeId(ID_DATE_CONTAINER))
-                        val dayView = dateContainer?.getChild(UserManager.day.toInt()-1)
-                        dayView?.click()
-                        val priceContainer = source.getNodeById(dmNodeId(ID_PRICE_CONTAINER))
-                        val priceView = priceContainer?.getChild(UserManager.price.toInt()-1)
-                        priceView?.click()
                         sleep(100)
                         val addView = source.getNodeById(dmNodeId(ID_PLUS_TICKET))
                         repeat(UserManager.contactList.size - 1) {
@@ -175,17 +168,16 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                 LIVE_TOTAL_UI -> {
                     step = STEP_FOURTH
                     event.source?.let { source ->
-                        if (System.currentTimeMillis() - lastTime < 1000L) {
-                            return
+                        if (!hasCheck) {
+                            sleep(500)
+                            for (name in UserManager.contactList) {
+                                val addView = source.getNodeByText(name, true)
+                                addView.click()
+                            }
+                            hasCheck = true
+                            val nodeByText = source.getNodeByText("提交订单", true)
+                            nodeByText?.click()
                         }
-                        lastTime = System.currentTimeMillis()
-                        sleep(500)
-                        for (name in UserManager.contactList) {
-                            val addView = source.getNodeByText(name, true)
-                            addView.click()
-                        }
-                        val nodeByText = source.getNodeByText("提交订单", true)
-                        nodeByText?.click()
                     }
                 }
             }
@@ -194,11 +186,11 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
             if (step == STEP_SECOND) {
                 event.source?.let { source ->
 //                    val minCount = source.getNodeById(dmNodeId(ID_COUNTDOWN_MINUTE))
+//                    val min = minCount.text()
                     val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
                     val text = startBuy.text()
-//                    val min = minCount.text()
                     logD("startBuy text:${startBuy.text()}")
-                    if (text == "立即预订") {
+                    if (text != kaiQiangStr) {
                         startBuy?.click()
                     }
                 }
@@ -233,8 +225,8 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
                     this, 0, Intent(this, MainActivity::class.java), FLAG_IMMUTABLE
                 )
             ).setSmallIcon(R.drawable.ic_app) // 设置小图标
-            .setContentTitle(getString(R.string.acc_des)).setContentText("添加好友")
-            .setTicker("添加好友").build()
+            .setContentTitle(getString(R.string.acc_des)).setContentText("大麦抢票")
+            .setTicker("大麦抢票").build()
     }
 
     override fun onDestroy() {
