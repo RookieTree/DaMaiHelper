@@ -15,6 +15,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:visibility="gone"
         android:id="@+id/et_price"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
@@ -36,6 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_user" />
 
     <EditText
+        android:visibility="gone"
         android:id="@+id/et_day"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
@@ -58,5 +60,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_day" />
+
+    <TextView
+        android:text="请一定要提前预选好场次和价格\n因为场次页面加载太慢"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start"
+        android:id="@+id/tv_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
