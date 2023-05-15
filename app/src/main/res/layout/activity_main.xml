@@ -5,66 +5,34 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/et_user"
+        android:id="@+id/et_singer"
         android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:hint="请输入观演人名字, 空格隔开"
+        android:hint="请输入歌手名, 默认五月天"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:visibility="gone"
-        android:id="@+id/et_price"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:inputType="number"
-        android:hint="请输入价格, 默认第3档"
-        app:layout_constraintTop_toBottomOf="@+id/et_day" />
-
-    <EditText
-        android:id="@+id/et_singer"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:hint="请输入歌手名, 默认五月天"
-        app:layout_constraintTop_toBottomOf="@+id/et_user" />
-
-    <EditText
-        android:visibility="gone"
-        android:id="@+id/et_day"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:inputType="number"
-        android:hint="请输入观看档期, 默认选第1个(填数字)"
-        app:layout_constraintTop_toBottomOf="@+id/et_singer" />
-
     <Button
+
         android:id="@+id/btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:padding="10dp"
         android:text="开抢"
         android:textColor="@color/white"
         android:background="@color/design_default_color_primary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_day" />
+        app:layout_constraintTop_toBottomOf="@+id/et_singer"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:text="请一定要提前预选好场次和价格\n因为场次页面加载太慢"
+        android:text="请一定要提前预选好场次、价格还有观演人"
         android:layout_marginTop="20dp"
         android:gravity="center"
+        android:textColor="@color/design_default_color_error"
         app:layout_constraintTop_toBottomOf="@+id/btn_start"
         android:id="@+id/tv_tip"
         android:layout_width="match_parent"

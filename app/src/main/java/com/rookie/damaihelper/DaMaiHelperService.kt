@@ -9,7 +9,6 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
-import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -120,8 +119,8 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
      * 监听窗口变化的回调
      */
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        logD("event_name:$event，isStop:$isStop")
-        if (event == null || isStop) {
+        logD("event_name:$event")
+        if (event == null || isStop || step == STEP_FINISH) {
             return
         }
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
@@ -144,14 +143,12 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
                 LIVE_SELECT_DETAIL_UI -> {
                     step = STEP_THIRD
-                    clickAddUser(event)
+                    confirmOrder(event)
                 }
 
                 LIVE_TOTAL_UI -> {
                     step = STEP_FOURTH
-//                    fullPrintNode("buybuy",event.source)
-                    sleep(200)
-                    confirmOrder(event)
+                    requestOrder(event)
                 }
             }
         } else if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
@@ -159,10 +156,9 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
             if (step == STEP_SECOND) {
                 startQ(event)
             } else if (step == STEP_THIRD) {
-                clickAddUser(event)
-            } else if (step == STEP_FOURTH) {
-//                fullPrintNode("final_step",event.source)
                 confirmOrder(event)
+            } else if (step == STEP_FOURTH) {
+                requestOrder(event)
             }
         }
     }
@@ -178,30 +174,16 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
         }
     }
 
-    private fun clickAddUser(event: AccessibilityEvent) {
+    private fun confirmOrder(event: AccessibilityEvent) {
         event.source?.let { source ->
             sleep(100)
-            val addView = source.getNodeById(dmNodeId(ID_PLUS_TICKET)) ?: return
-            repeat(UserManager.contactList.size - 1) {
-                addView.click()
-            }
             val buyView = source.getNodeById(dmNodeId(ID_CONFIRM_BUY))
             buyView?.click()
         }
     }
 
-    private fun confirmOrder(event: AccessibilityEvent) {
+    private fun requestOrder(event: AccessibilityEvent) {
         event.source?.let { source ->
-            if (!hasCheck) {
-                for (name in UserManager.contactList) {
-                    val userView = source.getNodeByText(name, true)
-                    logD("userView text:${userView.text()}")
-                    userView?.let {
-                        it.click()
-                        hasCheck = true
-                    }
-                }
-            }
             val nodeByText = source.getNodeByText("提交订单", true)
             nodeByText?.let {
                 it.click()

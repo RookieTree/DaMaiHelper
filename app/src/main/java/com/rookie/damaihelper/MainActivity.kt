@@ -14,10 +14,7 @@ import permissions.dispatcher.ktx.constructSystemAlertWindowPermissionRequest
 class MainActivity : BaseActivity() {
 
     private lateinit var btnStart: Button
-    private lateinit var etUser: EditText
     private lateinit var etSinger: EditText
-    private lateinit var etDay: EditText
-    private lateinit var etPrice: EditText
     private var dialog: Dialog? = null
     private var systemAlertRequest: PermissionsRequester? = null
 
@@ -25,13 +22,9 @@ class MainActivity : BaseActivity() {
 
     override fun init() {
         btnStart = findViewById(R.id.btn_start)
-        etUser = findViewById(R.id.et_user)
         etSinger = findViewById(R.id.et_singer)
-        etDay = findViewById(R.id.et_day)
-        etPrice = findViewById(R.id.et_price)
         btnStart.setOnClickListener {
             systemAlertRequest?.launch()
-//            startQiangp()
         }
         systemAlertRequest = constructSystemAlertWindowPermissionRequest() {
             startQiangp()
@@ -42,28 +35,12 @@ class MainActivity : BaseActivity() {
         if (!isAccessibilitySettingsOn(DaMaiHelperService::class.java)) {
             showAccessDialog()
         } else {
-            val names = etUser.text
-            if (TextUtils.isEmpty(names)) {
-                shortToast("请输入观演人名字，空格隔开")
-            } else {
-                UserManager.contactList.clear()
-                val list = names.split(" ")
-                UserManager.contactList.addAll(list)
-                val singer = etSinger.text
-                val day = etDay.text
-                val price = etPrice.text
-                if (!TextUtils.isEmpty(singer)){
-                    UserManager.singer=singer.toString()
-                }
-                if (!TextUtils.isEmpty(day)){
-                    UserManager.day=day.toString()
-                }
-                if (!TextUtils.isEmpty(price)){
-                    UserManager.price=price.toString()
-                }
-                startDaMai()
-                UserManager.startQp()
+            val single = etSinger.text
+            if (!TextUtils.isEmpty(single)) {
+                UserManager.singer = single.toString()
             }
+            startDaMai()
+            UserManager.startQp()
         }
     }
 
