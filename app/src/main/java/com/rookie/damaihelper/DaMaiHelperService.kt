@@ -30,33 +30,19 @@ import androidx.core.app.NotificationCompat
 class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
     companion object {
-        //首页-现场
-//        const val LIVE_UI = "cn.damai.discover.main.ui.TabLiveActivity"  // 现场
         //首页-我的
         const val ME_UI = "cn.damai.mine.activity.MineMainActivity"  // 我的
-
         //演唱会信息页
         const val LIVE_DETAIL_UI =
             "cn.damai.trade.newtradeorder.ui.projectdetail.ui.activity.ProjectDetailActivity"
-
         //购票选择页
         const val LIVE_SELECT_DETAIL_UI =
             "cn.damai.commonbusiness.seatbiz.sku.qilin.ui.NcovSkuActivity"
-
         //购票结算页
         const val LIVE_TOTAL_UI = "cn.damai.ultron.view.activity.DmOrderActivity"
 
-        //        const val ID_LIVE_DETAIL_BUY =
-//            "trade_project_detail_purchase_status_bar_container_fl"//详情页-开抢
         const val ID_LIVE_DETAIL_BUY = "tv_left_main_text"//详情页-开抢
-        const val ID_SELECT_CHANGCI_CONTAINER = "project_detail_perform_flowlayout"//选择场次容器
-        const val ID_PLUS_TICKET = "img_jia" // 选择票数
         const val ID_CONFIRM_BUY = "btn_buy" //确认购买
-        const val ID_COUNTDOWN_MINUTE = "tv_minute_count_down" //分钟倒计时
-
-        //        const val ID_PRICE_CONTAINER = "project_detail_perform_price_flowlayout" //分钟倒计时
-//        const val ID_DATE_CONTAINER = "project_detail_perform_flowlayout" //分钟倒计时
-        const val ID_USER_CONTAINER = "recycler_main" //分钟倒计时
 
         const val STEP_READY = 0
         const val STEP_FIRST = 1
