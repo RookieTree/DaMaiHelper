@@ -153,12 +153,16 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
             }
         } else if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             fullPrintNode("content_change",event.source)
-            if (step == STEP_SECOND) {
-                startQ(event)
-            } else if (step == STEP_THIRD) {
-                confirmOrder(event)
-            } else if (step == STEP_FOURTH) {
-                requestOrder(event)
+            when (step) {
+                STEP_SECOND -> {
+                    startQ(event)
+                }
+                STEP_THIRD -> {
+                    confirmOrder(event)
+                }
+                STEP_FOURTH -> {
+                    requestOrder(event)
+                }
             }
         }
     }
@@ -166,10 +170,10 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
     private fun startQ(event: AccessibilityEvent) {
         event.source?.let { source ->
             val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
-            val text = startBuy.text()
-            logD("startBuy text:${startBuy.text()}")
-            if (text != kaiQiangStr) {
-                startBuy?.click()
+            startBuy?.text()?.let {
+                if (it != kaiQiangStr) {
+                    startBuy.click()
+                }
             }
         }
     }
@@ -206,8 +210,6 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
     private fun createForegroundNotification(): Notification? {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-        // 创建通知渠道，一定要写在创建显示通知之前，创建通知渠道的代码只有在第一次执行才会创建
-        // 以后每次执行创建代码检测到该渠道已存在，因此不会重复创建
         val channelId = "damai"
         notificationManager?.createNotificationChannel(
             NotificationChannel(
