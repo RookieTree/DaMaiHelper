@@ -57,8 +57,9 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
 
     private var overlayView: View? = null
     private var mWindowManager: WindowManager? = null
-    private val kaiQiangStr = "即将开抢"
-    private val queHuoStr = "缺货登记"
+    private val jiJiangStr = "即将"
+    private val queHuoStr = "缺货"
+    private val yuYueStr = "预约"
 
     override fun onCreate() {
         super.onCreate()
@@ -158,7 +159,8 @@ class DaMaiHelperService : AccessibilityService(), UserManager.IStartListener {
         event.source?.let { source ->
             val startBuy = source.getNodeById(dmNodeId(ID_LIVE_DETAIL_BUY))
             startBuy?.text()?.let {
-                if (it != kaiQiangStr && it != queHuoStr) {
+                if (!it.contains(jiJiangStr) && !it.contains(queHuoStr) &&
+                    !it.contains(yuYueStr)) {
                     startBuy.click()
                     logD("buy_text:$it")
                 }
